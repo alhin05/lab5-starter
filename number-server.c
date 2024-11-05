@@ -11,6 +11,20 @@ void handle_404(int client_sock, char *path)  {
     // snprintf includes a null-terminator
 
     // TODO: send response back to client?
+    write(client_sock, HTTP_404_NOT_FOUND, strlen(HTTP_404_NOT_FOUND));
+    write(client_sock, reponse_buff, strlen(reponse_buff));
+}
+
+void handle_shownum(int client_sock, char *path)  {
+    printf("SERVER LOG: Got shownum\n");
+
+    char response_buff[BUFFER_SIZE];
+    snprintf(response_buff, BUFFER_SIZE, "Your Number is %d\n", num);
+    // snprintf includes a null-terminator
+
+    // TODO: send response back to client?
+    write(client_sock, HTTP_404_NOT_FOUND, strlen(HTTP_404_NOT_FOUND));
+    write(client_sock, reponse_buff, strlen(reponse_buff));
 }
 
 
@@ -23,6 +37,12 @@ void handle_response(char *request, int client_sock) {
     if (sscanf(request, "GET %255s", path) != 1) {
         printf("Invalid request line\n");
         return;
+    }
+    //have path
+    if (strcmp(path, "/shownum") == 0) {
+        handle_shownum(client_sock);
+    } else {
+        handle_404(client_sock, path);
     }
 
     handle_404(client_sock, path);
